@@ -10,6 +10,7 @@ public class CreateInvitationController {
     private InvitationManager manager;
     private boolean editMode = false;
     private Activity editingActivity = null;
+    private Runnable onSaveSuccess;
 
     @FXML private TextField orgField;
     @FXML private DatePicker datePicker;
@@ -42,6 +43,10 @@ public class CreateInvitationController {
 
     public void setManager(InvitationManager manager) {
         this.manager = manager;
+    }
+
+    public void setOnSaveSuccess(Runnable onSaveSuccess) {
+        this.onSaveSuccess = onSaveSuccess;
     }
 
     public void setEditActivity(Activity activity) {
@@ -128,7 +133,7 @@ public class CreateInvitationController {
             }
 
             if (!editMode) {
-                // add mode
+                // ===== add mode =====
                 Invitation invitation = new Invitation(
                     organizer,
                     date.toString(),
@@ -144,6 +149,10 @@ public class CreateInvitationController {
 
                 manager.addInvitation(invitation);
 
+                if (onSaveSuccess != null) {
+                    onSaveSuccess.run();
+                }
+
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText("Reservation Successful!");
@@ -151,7 +160,7 @@ public class CreateInvitationController {
                 alert.showAndWait();
 
             } else {
-                // edit mode: 先改畫面上的 Activity
+                // ===== edit mode =====
                 editingActivity.setActivityName(sport);
                 editingActivity.setOrganizer(organizer);
                 editingActivity.setDate(date.toString());
@@ -160,7 +169,6 @@ public class CreateInvitationController {
                     String.format("%02d:%02d ~ %02d:%02d", startH, startM, endH, endM)
                 );
 
-                // 再改 manager 裡真正那筆 Invitation
                 Invitation target = manager.findByPin(editingActivity.getPin());
 
                 if (target != null) {

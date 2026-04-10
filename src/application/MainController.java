@@ -12,12 +12,10 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
+
 public class MainController {
 
-    // ===== 共用同一個 manager =====
     private InvitationManager manager = new InvitationManager();
-
-    // ===== 記住 ActivityListController，之後 edit 會用到 =====
     private ActivityListController activityListController;
 
     @FXML
@@ -29,8 +27,13 @@ public class MainController {
     @FXML
     private Button editBtn;
 
+    // ===== 原本地圖 hover 用的 Label =====
     @FXML
     private Label infoLabel;
+
+    // ===== 新增：顯示最新新增 activity 的 Label =====
+    @FXML
+    private Label latestActivityLabel;
 
     @FXML
     private Polygon carterPlayground;
@@ -49,12 +52,14 @@ public class MainController {
 
     @FXML
     public void initialize() {
-    	 // ===== 假資料 =====
-    	 manager.addInvitation(new Invitation("Alice", "2026-04-15", 9, 0, 11, 0, 4, "Basketball", "Marino Recreation Center", "All Gender"));
-    	 manager.addInvitation(new Invitation("Bob", "2026-04-16", 14, 30, 16, 0, 2, "Squash", "SquashBusters", "Male"));
-    	 manager.addInvitation(new Invitation("Carol", "2026-04-17", 7, 0, 8, 30, 6, "Yoga", "Cabot Center", "Female"));
-    	 manager.addInvitation(new Invitation("David", "2026-04-18", 18, 0, 20, 0, 8, "Soccer", "Carter Playground", "All Gender"));
-    	 manager.addInvitation(new Invitation("Eve", "2026-04-19", 10, 0, 12, 0, 3, "Tennis", "Roxbury YMCA", "Female"));
+        // ===== 假資料：只在 manager 為空時加入，避免重複加資料 =====
+        if (manager.isEmpty()) {
+            manager.addInvitation(new Invitation("Alice", "2026-04-15", 9, 0, 11, 0, 4, "Basketball", "Marino Recreation Center", "All Gender"));
+            manager.addInvitation(new Invitation("Bob", "2026-04-16", 14, 30, 16, 0, 2, "Squash", "SquashBusters", "Male"));
+            manager.addInvitation(new Invitation("Carol", "2026-04-17", 7, 0, 8, 30, 6, "Yoga", "Cabot Center", "Female"));
+            manager.addInvitation(new Invitation("David", "2026-04-18", 18, 0, 20, 0, 8, "Soccer", "Carter Playground", "All Gender"));
+            manager.addInvitation(new Invitation("Eve", "2026-04-19", 10, 0, 12, 0, 3, "Tennis", "Roxbury YMCA", "Female"));
+        }
 
         // ===== hover layer =====
         if (carterPlayground != null) carterPlayground.toFront();
@@ -87,6 +92,16 @@ public class MainController {
         if (titusSparrowPark != null) {
             setupHover(titusSparrowPark, "Titus Sparrow Park\n★★★★\n06:00 ~ 23:30\nLow 🟢");
         }
+
+        // ===== 新增：初始化首頁最新 activity 顯示 =====
+        refreshLatestActivityLabel();
+    }
+
+    // ===== 新增：更新首頁最新 activity label =====
+    private void refreshLatestActivityLabel() {
+        if (latestActivityLabel != null && manager != null) {
+            latestActivityLabel.setText(manager.getLatestActivityText());
+        }
     }
 
     // ===== hover helper =====
@@ -114,6 +129,7 @@ public class MainController {
 
             CreateInvitationController controller = loader.getController();
             controller.setManager(manager);   // 同一份 manager
+            controller.setOnSaveSuccess(() -> refreshLatestActivityLabel());
 
             Stage stage = new Stage();
             stage.setTitle("Create Activity");
@@ -148,7 +164,6 @@ public class MainController {
     @FXML
     private void handleEditActivity(ActionEvent event) {
 
-        // ===== 先檢查 ActivityListController 是否已經建立 =====
         if (activityListController == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -204,10 +219,10 @@ public class MainController {
     }
 
     public void setManager(InvitationManager manager) {
-		// TODO Auto-generated method stub
-		 this.manager = manager;
-	}
-    
+        this.manager = manager;
+        refreshLatestActivityLabel();
+    }
+
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -215,6 +230,4 @@ public class MainController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-	
 }

@@ -1,17 +1,21 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class InvitationManager {
     private ArrayList<Invitation> invitationList;
+    private Stack<String> recentActivityStack;
 
     public InvitationManager() {
         invitationList = new ArrayList<>();
+        recentActivityStack = new Stack<>();
     }
 
     public void addInvitation(Invitation invitation) {
         if (invitation != null) {
             invitationList.add(invitation);
+            recentActivityStack.push(formatRecentActivity(invitation));
         }
     }
 
@@ -47,5 +51,16 @@ public class InvitationManager {
 
     public boolean isEmpty() {
         return invitationList.isEmpty();
+    }
+
+    private String formatRecentActivity(Invitation invitation) {
+        return "Latest Activity:" + " | "+ invitation.getSport()  + " | "+ invitation.getLocation() + " | "+ invitation.getTimeSlot();
+    }
+
+    public String getLatestActivityText() {
+        if (recentActivityStack.isEmpty()) {
+            return "No activity has been added yet.";
+        }
+        return recentActivityStack.peek();
     }
 }
