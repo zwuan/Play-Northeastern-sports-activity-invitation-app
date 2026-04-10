@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="500.0" prefWidth="700.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.ActivityListController">
+
+    <top>
+        <VBox spacing="10" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="15" right="15" bottom="10" left="15"/>
+            </padding>
+
+            <Label text="Activity List"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="filterField"
+                           promptText="Enter any key words (activity, organizer, date, time, or location)"
+                           prefWidth="420.0" />
+
+                <Button text="Apply Filter"
+                        onAction="#handleFilter"
+                        prefWidth="90.0" />
+
+                <Button text="Clear"
+                        onAction="#handleClearFilter"
+                        prefWidth="90.0" />
+            </HBox>
+
+            <Label fx:id="messageLabel"
+                   text="Please select an activity."
+                   style="-fx-font-size: 13px;" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" right="15" bottom="10" left="15"/>
+            </padding>
+
+            <TableView fx:id="activityTable" prefHeight="350.0" prefWidth="650.0">
+                <columns>
+                    <TableColumn fx:id="colName" text="Activity Name" prefWidth="120.0" />
+                    <TableColumn fx:id="colOrganizer" text="Organizer" prefWidth="100.0" />
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="100.0" />
+                    <TableColumn fx:id="colTimeSlot" text="Time Slot" prefWidth="120.0" />
+                    <TableColumn fx:id="colLocation" text="Location" prefWidth="140.0" />
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="70.0" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" right="15" bottom="20" left="15"/>
+            </padding>
+
+            <Button text="Join"
+                    onAction="#handleJoin"
+                    prefWidth="100.0" />
+
+            <Button text="Edit"
+                    onAction="#handleEditActivity"
+                    prefWidth="100.0" />
+
+            <Button text="Back"
+                    onAction="#handleBack"
+                    prefWidth="100.0" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
