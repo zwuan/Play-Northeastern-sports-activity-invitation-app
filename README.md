@@ -7,9 +7,9 @@ This project was built as a course project using Java and JavaFX, with a focus o
 ## Features
 
 - Create a new sports activity invitation
-- Generate a unique PIN for each activity
+- Generate a unique, random PIN for each activity
 - Browse all activities in a table view
-- Filter activities by keyword
+- Filter activities by entering keywords
 - Join an activity and update player counts
 - Edit an existing activity after PIN verification
 - Show the latest created activity on the home screen
@@ -20,7 +20,6 @@ This project was built as a course project using Java and JavaFX, with a focus o
 - Java
 - JavaFX
 - FXML
-- Eclipse-style Java project structure
 
 ## Project Structure
 
@@ -55,17 +54,15 @@ They are loaded from [`src/application/Main.fxml`](/Users/jimmyzuang/git/Play-No
 <Image url="@../Play!Northeastern.png" />
 ```
 
-This means the image files must stay available in the compiled runtime resource path as siblings of the `application/` folder.
+This means the image files MUST stay available in the compiled runtime resource path as siblings of the `application/` folder.
 
 ### If the logo or map does not display
 
 Common fixes:
 
 1. Make sure `map2.jpg` and `Play!Northeastern.png` are present in `src/`.
-2. Make sure those files are also copied into the runtime output folder, for example `bin/map2.jpg` and `bin/Play!Northeastern.png`.
-3. If you are using Eclipse, refresh the project and clean/rebuild so non-Java resources are copied again.
-4. If you compile manually, copy the image files into `bin/` after compilation, because `javac` only compiles `.java` files and does not automatically move image assets.
-5. Do not rename or move the image files unless you also update the paths inside `Main.fxml`.
+2. Make sure those files are also copied into the runtime output folder.
+3. Do not rename or move the image files unless you also update the paths inside `Main.fxml`.
 
 Example manual fix after compiling:
 
@@ -88,9 +85,9 @@ Users can create an activity by entering:
 
 - organizer name
 - date
-- start and end time
-- player count
-- sport
+- start / end time
+- player counts
+- sport type
 - location
 - gender restriction
 
@@ -115,7 +112,7 @@ Users can edit an existing activity after entering the correct PIN.
 
 ## Course CSYE6200 Requirement Coverage
 
-This project uses JavaFX and currently covers at least 5 required topics:
+This project uses JavaFX and covers 6 required topics:
 
 1. Class Definition
    Examples: `Invitation`, `InvitationManager`, `Activity`
