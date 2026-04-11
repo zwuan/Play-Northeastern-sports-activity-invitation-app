@@ -63,7 +63,7 @@ public class CreateInvitationController {
             try {
                 datePicker.setValue(LocalDate.parse(activity.getDate()));
             } catch (Exception e) {
-                // ignore
+            	showError("Invalid Date.");
             }
         }
 
@@ -78,7 +78,7 @@ public class CreateInvitationController {
                 endHField.setText(end[0]);
                 endMField.setText(end[1]);
             } catch (Exception e) {
-                // ignore
+            	showError("Invalid Time.");
             }
         }
 
@@ -143,7 +143,6 @@ public class CreateInvitationController {
             }
 
             if (!editMode) {
-                // ===== add mode =====
                 Invitation invitation = new Invitation(
                     organizer,
                     date.toString(),

@@ -18,7 +18,7 @@
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Create Invitation" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Create/Edit Invitation" />
 
     <GridPane hgap="10" vgap="12">
       <Label text="Name:" />
