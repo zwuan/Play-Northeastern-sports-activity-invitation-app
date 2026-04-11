@@ -11,7 +11,7 @@
 
     <Button fx:id="createBtn" layoutX="102.0" layoutY="434.0" onAction="#handleCreateActivity" text="Create an activity" />
 
-    <Button fx:id="joinBtn" layoutX="496.0" layoutY="434.0" onAction="#handleJoinActivity" text="Join an activity" />
+    <Button fx:id="joinBtn" layoutX="496.0" layoutY="434.0" onAction="#handleJoinActivity" text="Join / Edit an activity" />
    <Polygon fx:id="carterPlayground" fill="#FFD700" layoutX="478.0" layoutY="334.0" opacity="0.0" points="-39.096710205078125, 28.630584716796875, 16.904205322265625, 14.693695068359375, 9.809051513671875, -6.08489990234375, -12.996734619140625, 1.770416259765625, -16.797698974609375, -2.537353515625, -33.775360107421875, 10.132537841796875" stroke="BLACK" strokeType="INSIDE" />
    <Polygon fx:id="marinoRecreationCenter" fill="#FFD700" layoutX="448.0" layoutY="294.0" opacity="0.0" points="-49.386962890625, -23.859588623046875, -35.4500732421875, -23.859588623046875, -35.4500732421875, -39.316864013671875, -63.57720947265625, -39.316864013671875, -66.36459350585938, -29.434356689453125, -59.01605224609375, -23.859588623046875" stroke="BLACK" strokeType="INSIDE" styleClass="Fenway Court" />
    <Polygon fx:id="cabotCenter" fill="#FFD700" layoutX="458.0" layoutY="304.0" opacity="0.0" points="-79.40536499023438, -20.42950439453125, -79.40536499023438, -15.108154296875, -61.920928955078125, -16.6285400390625, -61.920928955078125, -26.0042724609375, -74.84420776367188, -26.0042724609375, -74.84420776367188, -20.42950439453125" stroke="BLACK" strokeType="INSIDE" />
