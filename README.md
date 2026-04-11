@@ -54,7 +54,7 @@ They are loaded from [`src/application/Main.fxml`](/Users/jimmyzuang/git/Play-No
 <Image url="@../Play!Northeastern.png" />
 ```
 
-This means the image files MUST stay available in the compiled runtime resource path as siblings of the `application/` folder.
+This means the image files **MUST** stay available in the compiled runtime resource path as siblings of the `application/` folder.
 
 ### If the logo or map does not display
 
@@ -64,7 +64,7 @@ Common fixes:
 2. Make sure those files are also copied into the runtime output folder.
 3. Do not rename or move the image files unless you also update the paths inside `Main.fxml`.
 
-Example manual fix after compiling:
+Example manual fix 1:
 
 ```bash
 cp src/map2.jpg bin/
@@ -104,7 +104,7 @@ MR168F
 
 ### Join Activity
 
-Users can open the activity list, select an activity, and join it if the activity is not full.
+Users can open the activity list, select an activity, and join it if the activity is not yet full.
 
 ### Edit Activity
 
@@ -115,17 +115,17 @@ Users can edit an existing activity after entering the correct PIN.
 This project uses JavaFX and covers 6 required topics:
 
 1. Class Definition
-   Examples: `Invitation`, `InvitationManager`, `Activity`
+   Ex: `Invitation`, `InvitationManager`, `Activity`
 2. Inheritance
-   Example: `Main extends Application`
+   Ex: `Main extends Application`
 3. Interfaces
    Example: `ActivityListController implements Initializable`
 4. Generics / Collections / Iterators
-   Examples: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
+   Ex: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
 5. Lists
-   Example: `ArrayList<Invitation>`
+   Ex: `ArrayList<Invitation>`
 6. Stacks
-   Example: `Stack<String>` for latest activity tracking
+   Ex: `Stack<String>` for latest activity tracking
 
 ## Running the Project
 
