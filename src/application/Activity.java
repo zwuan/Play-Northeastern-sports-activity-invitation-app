@@ -8,10 +8,11 @@ public class Activity {
 	private SimpleStringProperty date;
 	private SimpleStringProperty location;
 	private SimpleStringProperty timeSlot;
+	private SimpleStringProperty gender;
 	private SimpleStringProperty status;
 	private SimpleStringProperty pin;
 
-	public Activity(String activityName, String organizer, String date, String location, String status, String pin, String timeSlot) {
+	public Activity(String activityName, String organizer, String date, String location, String status, String pin, String timeSlot, String gender) {
 		this.activityName = new SimpleStringProperty(activityName);
 		this.organizer = new SimpleStringProperty(organizer);
 		this.date = new SimpleStringProperty(date);
@@ -19,10 +20,18 @@ public class Activity {
 		this.status = new SimpleStringProperty(status);
 		this.pin = new SimpleStringProperty(pin);
 		this.timeSlot = new SimpleStringProperty(timeSlot);
+		this.gender = new SimpleStringProperty(gender);
 	}
 	
 	public void setTimeSlot(String timeSlot) {
 		this.timeSlot.set(timeSlot);
+	}
+	public String getGender() {
+		return gender.get();
+	}
+	
+	public void setGender(String gender) {
+		this.gender.set(gender);
 	}
 
 	public String getTimeSlot() {

@@ -93,18 +93,18 @@ public class MainController {
             setupHover(titusSparrowPark, "Titus Sparrow Park\n★★★★\n06:00 ~ 23:30\nLow 🟢");
         }
 
-        // ===== 新增：初始化首頁最新 activity 顯示 =====
+        //refresh latest activity
         refreshLatestActivityLabel();
     }
 
-    // ===== 新增：更新首頁最新 activity label =====
+    // Update latest activity label 
     private void refreshLatestActivityLabel() {
         if (latestActivityLabel != null && manager != null) {
             latestActivityLabel.setText(manager.getLatestActivityText());
         }
     }
 
-    // ===== hover helper =====
+    // hover helper
     private void setupHover(Polygon area, String message) {
         area.setOnMouseEntered(e -> {
             area.setOpacity(0.35);
@@ -116,7 +116,7 @@ public class MainController {
         area.setOnMouseExited(e -> {
             area.setOpacity(0.0);
             if (infoLabel != null) {
-                infoLabel.setText("Move your mouse over a court to see information.");
+                infoLabel.setText("Move your mouse for information.");
             }
         });
     }
@@ -128,7 +128,7 @@ public class MainController {
             Parent root = loader.load();
 
             CreateInvitationController controller = loader.getController();
-            controller.setManager(manager);   // 同一份 manager
+            controller.setManager(manager);
             controller.setOnSaveSuccess(() -> refreshLatestActivityLabel());
 
             Stage stage = new Stage();
@@ -149,7 +149,7 @@ public class MainController {
             Parent root = loader.load();
 
             activityListController = loader.getController();
-            activityListController.setManager(manager);   // 同一份 manager
+            activityListController.setManager(manager);  
 
             Stage stage = (Stage) joinBtn.getScene().getWindow();
             stage.setScene(new Scene(root, 700, 500));

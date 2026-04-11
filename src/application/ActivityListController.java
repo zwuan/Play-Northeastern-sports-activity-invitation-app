@@ -23,6 +23,7 @@ public class ActivityListController implements Initializable {
     @FXML private TableColumn<Activity, String> colTimeSlot;
     @FXML private TableColumn<Activity, String> colDate;
     @FXML private TableColumn<Activity, String> colLocation;
+    @FXML private TableColumn<Activity, String> colGender;
     @FXML private TableColumn<Activity, String> colStatus;
     @FXML private Label messageLabel;
     @FXML private TextField filterField;
@@ -56,6 +57,10 @@ public class ActivityListController implements Initializable {
         colLocation.setCellValueFactory(
             data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getLocation()));
+        
+        colGender.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(
+                    data.getValue().getGender()));
 
         colStatus.setCellValueFactory(
             data -> new javafx.beans.property.SimpleStringProperty(
@@ -106,7 +111,8 @@ public class ActivityListController implements Initializable {
                 inv.getLocation(),
                 inv.getJoinedCount() + " / " + inv.getCount(),
                 inv.getPin(),
-                inv.getTimeSlot()
+                inv.getTimeSlot(),
+                inv.getGender()
             ));
         }
 

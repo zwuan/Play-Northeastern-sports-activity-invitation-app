@@ -57,6 +57,7 @@
                     <TableColumn fx:id="colDate" text="Date" prefWidth="100.0" />
                     <TableColumn fx:id="colTimeSlot" text="Time Slot" prefWidth="120.0" />
                     <TableColumn fx:id="colLocation" text="Location" prefWidth="140.0" />
+                    <TableColumn fx:id="colGender" text="Gender" prefWidth="90.0" />
                     <TableColumn fx:id="colStatus" text="Status" prefWidth="70.0" />
                 </columns>
             </TableView>
