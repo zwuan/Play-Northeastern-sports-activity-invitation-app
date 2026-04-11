@@ -81,6 +81,16 @@ public class CreateInvitationController {
                 // ignore
             }
         }
+
+        if (manager != null) {
+            Invitation target = manager.findByPin(activity.getPin());
+            if (target != null) {
+                countField.setText(String.valueOf(target.getCount()));
+                genderBox.setValue(target.getGender());
+            }
+        }
+
+        saveButton.setText("Update");
     }
 
     @FXML
@@ -160,7 +170,7 @@ public class CreateInvitationController {
                 alert.showAndWait();
 
             } else {
-                // ===== edit mode =====
+                //ediit
                 editingActivity.setActivityName(sport);
                 editingActivity.setOrganizer(organizer);
                 editingActivity.setDate(date.toString());

@@ -27,11 +27,11 @@ public class MainController {
     @FXML
     private Button editBtn;
 
-    // ===== 原本地圖 hover 用的 Label =====
+    // hover Label
     @FXML
     private Label infoLabel;
 
-    // ===== 新增：顯示最新新增 activity 的 Label =====
+    // latest activities
     @FXML
     private Label latestActivityLabel;
 
@@ -52,7 +52,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        // ===== 假資料：只在 manager 為空時加入，避免重複加資料 =====
+        // FAke data
         if (manager.isEmpty()) {
             manager.addInvitation(new Invitation("Alice", "2026-04-15", 9, 0, 11, 0, 4, "Basketball", "Marino Recreation Center", "All Gender"));
             manager.addInvitation(new Invitation("Bob", "2026-04-16", 14, 30, 16, 0, 2, "Squash", "SquashBusters", "Male"));
@@ -61,7 +61,7 @@ public class MainController {
             manager.addInvitation(new Invitation("Eve", "2026-04-19", 10, 0, 12, 0, 3, "Tennis", "Roxbury YMCA", "Female"));
         }
 
-        // ===== hover layer =====
+        //hover layer
         if (carterPlayground != null) carterPlayground.toFront();
         if (marinoRecreationCenter != null) marinoRecreationCenter.toFront();
         if (cabotCenter != null) cabotCenter.toFront();
@@ -70,7 +70,7 @@ public class MainController {
         if (infoLabel != null) infoLabel.toFront();
 
         if (infoLabel != null) {
-            infoLabel.setText("Move your mouse over a court to see information.");
+            infoLabel.setText("Move your mouse for information.");
         }
 
         if (carterPlayground != null) {

@@ -27,10 +27,10 @@ public class ActivityListController implements Initializable {
     @FXML private Label messageLabel;
     @FXML private TextField filterField;
 
-    // 使用真正的 invitation 資料來源
+    // invitation source
     private InvitationManager manager;
 
-    // 給 table 用的 activity list
+    // Activity list for table
     private ObservableList<Activity> activityList = FXCollections.observableArrayList();
 
     @Override
@@ -64,16 +64,18 @@ public class ActivityListController implements Initializable {
         activityTable.setItems(activityList);
     }
 
-    // MainController 呼叫這個，把共用 manager 傳進來
+    // MainController call manager
     public void setManager(InvitationManager manager) {
         this.manager = manager;
         loadInvitations();
     }
 
-    // 從 InvitationManager 載入資料到 table
+    // InvitationManager too table
     private void loadInvitations() {
         loadInvitations("");
     }
+    
+    
 
     private void loadInvitations(String keyword) {
         activityList.clear();
@@ -185,10 +187,10 @@ public class ActivityListController implements Initializable {
 
                     CreateInvitationController controller = loader.getController();
 
-                    // 把 manager 傳進去，避免 edit 或 save 時拿不到同一份資料
+                    // use manager to sync edit+save
                     controller.setManager(manager);
 
-                    // 把目前選到的 activity 傳進去做 edit
+                    // select activity to edit
                     controller.setEditActivity(selected);
 
                     Stage stage = new Stage();
@@ -202,7 +204,11 @@ public class ActivityListController implements Initializable {
                     messageLabel.setText("Failed to open edit window.");
                 }
             } else {
-                messageLabel.setText("Wrong PIN.");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Wrong PIN");
+                alert.setContentText("Incorrect PIN.");
+                alert.showAndWait();
             }
         });
     }
@@ -224,12 +230,11 @@ public class ActivityListController implements Initializable {
         }
     }
 
-    // 給 MainController 取得目前選到的 activity
+    //  MainController get selected activity
     public Activity getSelectedActivity() {
         return activityTable.getSelectionModel().getSelectedItem();
     }
-
-    // 手動新增 activity 到 table
+// activity to table
     public void addActivity(Activity activity) {
         if (activity != null) {
             activityList.add(activity);
