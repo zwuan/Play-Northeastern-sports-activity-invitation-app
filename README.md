@@ -26,6 +26,8 @@ This project was built as a course project using Java and JavaFX, with a focus o
 
 ```text
 src/
+  map2.jpg
+  Play!Northeastern.png
   application/
     Main.java
     MainController.java
@@ -38,6 +40,41 @@ src/
     ActivityList.fxml
     CreateInvitation.fxml
 ```
+
+## Local Image Assets
+
+The logo and map images used by the JavaFX UI are local project files included in this repository.
+
+- Logo image: `src/Play!Northeastern.png`
+- Map image: `src/map2.jpg`
+
+They are loaded from [`src/application/Main.fxml`](/Users/jimmyzuang/git/Play-Northeastern-sports-activity-invitation-app/src/application/Main.fxml) using relative paths:
+
+```xml
+<Image url="@../map2.jpg" />
+<Image url="@../Play!Northeastern.png" />
+```
+
+This means the image files must stay available in the compiled runtime resource path as siblings of the `application/` folder.
+
+### If the logo or map does not display
+
+Common fixes:
+
+1. Make sure `map2.jpg` and `Play!Northeastern.png` are present in `src/`.
+2. Make sure those files are also copied into the runtime output folder, for example `bin/map2.jpg` and `bin/Play!Northeastern.png`.
+3. If you are using Eclipse, refresh the project and clean/rebuild so non-Java resources are copied again.
+4. If you compile manually, copy the image files into `bin/` after compilation, because `javac` only compiles `.java` files and does not automatically move image assets.
+5. Do not rename or move the image files unless you also update the paths inside `Main.fxml`.
+
+Example manual fix after compiling:
+
+```bash
+cp src/map2.jpg bin/
+cp src/Play!Northeastern.png bin/
+```
+
+If you change the folder structure later, update the image references in `Main.fxml` to match the new relative locations.
 
 ## How It Works
 
@@ -123,4 +160,3 @@ java -cp bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls
 - Add user accounts and authentication
 - Support deleting activities
 - Improve validation and error handling
-
