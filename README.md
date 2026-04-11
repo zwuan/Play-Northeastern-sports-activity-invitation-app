@@ -114,18 +114,12 @@ Users can edit an existing activity after entering the correct PIN.
 
 This project uses JavaFX and covers 6 required topics:
 
-1. Class Definition
-   Ex: `Invitation`, `InvitationManager`, `Activity`
-2. Inheritance
-   Ex: `Main extends Application`
-3. Interfaces
-   Example: `ActivityListController implements Initializable`
-4. Generics / Collections / Iterators
-   Ex: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
-5. Lists
-   Ex: `ArrayList<Invitation>`
-6. Stacks
-   Ex: `Stack<String>` for latest activity tracking
+1. Class Definition: `Invitation`, `InvitationManager`, `Activity`
+2. Inheritance: `Main extends Application`
+3. Interfaces: `ActivityListController implements Initializable`
+4. Generics / Collections / Iterators: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
+5. Lists: `ArrayList<Invitation>`
+6. Stacks: `Stack<String>` for latest activity tracking
 
 ## Running the Project
 
