@@ -168,7 +168,7 @@ public class ActivityListController implements Initializable {
         messageLabel.setText("Joined: " + selected.getActivityName()
             + "  (" + inv.getJoinedCount() + "/" + inv.getCount() + ")");
 
-        refreshTable();  // 刷新 table 讓人數即時更新
+        refreshTable();
     }
     
     @FXML
