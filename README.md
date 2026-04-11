@@ -59,6 +59,15 @@ Users can create an activity by entering:
 
 After saving, the app generates a PIN for that activity.
 
+PIN structure:
+```
+XX(Location Initials) + XXX(Random Generated Numbers) + X(Gender Initials)
+```
+Example PIN 1: Marino Recreation Center, Female
+```
+MR168F
+```
+
 ### Join Activity
 
 Users can open the activity list, select an activity, and join it if the activity is not full.
@@ -67,7 +76,7 @@ Users can open the activity list, select an activity, and join it if the activit
 
 Users can edit an existing activity after entering the correct PIN.
 
-## Course Requirement Coverage
+## Course CSYE6200 Requirement Coverage
 
 This project uses JavaFX and currently covers at least 5 required topics:
 
@@ -101,12 +110,6 @@ javac -d bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls
 java -cp bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml application.Main
 ```
 
-Example from this machine:
-
-```bash
-javac -d bin --module-path /Users/jimmyzuang/JavaFX-SDK/javafx-sdk-25.0.2-aarch64/lib --add-modules javafx.controls,javafx.fxml src/application/*.java
-java -cp bin --module-path /Users/jimmyzuang/JavaFX-SDK/javafx-sdk-25.0.2-aarch64/lib --add-modules javafx.controls,javafx.fxml application.Main
-```
 
 ## Notes
 
@@ -120,5 +123,4 @@ java -cp bin --module-path /Users/jimmyzuang/JavaFX-SDK/javafx-sdk-25.0.2-aarch6
 - Add user accounts and authentication
 - Support deleting activities
 - Improve validation and error handling
-- Add unit tests
 
