@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class MainController {
 
-    private InvitationManager manager = new InvitationManager();
+    private InvitationManager manager = new InvitationManager();// Shared data manager
     private ActivityListController activityListController;
 
     @FXML
@@ -120,7 +120,8 @@ public class MainController {
             }
         });
     }
-
+    
+    //Opens the Create Invitation form in a new window
     @FXML
     private void handleCreateActivity(ActionEvent event) {
         try {
@@ -141,7 +142,8 @@ public class MainController {
             showError("Failed to open Create Activity window.");
         }
     }
-
+    
+    //Opens the Join Activity form in a new window
     @FXML
     private void handleJoinActivity(ActionEvent event) {
         try {
@@ -160,7 +162,7 @@ public class MainController {
             showError("Failed to open Activity List.");
         }
     }
-
+    //Opens the Edit Activity form in a new window
     @FXML
     private void handleEditActivity(ActionEvent event) {
 

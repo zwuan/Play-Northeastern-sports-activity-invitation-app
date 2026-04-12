@@ -6,12 +6,14 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class CreateInvitationController {
-
-    private InvitationManager manager;
-    private boolean editMode = false;
-    private Activity editingActivity = null;
-    private Runnable onSaveSuccess;
-
+    
+	
+    private InvitationManager manager; // Shared data manager passed in from the previous screen
+    private boolean editMode = false; // Tracks whether if we are editing an existing activity (true) or creating a new one (false)
+    private Activity editingActivity = null; // The activity being edited
+    private Runnable onSaveSuccess; //Optional Callback
+    
+    //FXML fields injected from CreateInvitation.fxml 
     @FXML private TextField orgField;
     @FXML private DatePicker datePicker;
     @FXML private TextField startHField;
@@ -23,7 +25,8 @@ public class CreateInvitationController {
     @FXML private ComboBox<String> locationBox;
     @FXML private ComboBox<String> genderBox;
     @FXML private Button saveButton;
-
+    
+    //populate Combo Box for location and gender, also setting datePicker
     @FXML
     public void initialize() {
         locationBox.getItems().addAll(
@@ -39,26 +42,38 @@ public class CreateInvitationController {
             "Female",
             "All Gender"
         );
+        
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(LocalDate.now()));// can only choose date today or date after today
+            }
+        });
     }
-
+    
+    //set Manager
     public void setManager(InvitationManager manager) {
         this.manager = manager;
     }
-
+    
+    //set Callback
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
         this.onSaveSuccess = onSaveSuccess;
     }
-
+    
     public void setEditActivity(Activity activity) {
         if (activity == null) return;
-
+        
+        //pre-fill data
         this.editMode = true;
         this.editingActivity = activity;
-
+        
         sportField.setText(activity.getActivityName());
         orgField.setText(activity.getOrganizer());
         locationBox.setValue(activity.getLocation());
-
+        
+        // Parse and set the date, show error if format is invalid
         if (activity.getDate() != null && !activity.getDate().isEmpty()) {
             try {
                 datePicker.setValue(LocalDate.parse(activity.getDate()));
@@ -66,7 +81,8 @@ public class CreateInvitationController {
             	showError("Invalid Date.");
             }
         }
-
+       
+        // Parse time slot (format: "HH:MM ~ HH:MM") and fill into separate fields
         if (activity.getTimeSlot() != null && activity.getTimeSlot().contains("~")) {
             try {
                 String[] parts = activity.getTimeSlot().split("~");
@@ -81,7 +97,8 @@ public class CreateInvitationController {
             	showError("Invalid Time.");
             }
         }
-
+        
+     // Find the matching Invitation in the manager to load count and gender
         if (manager != null) {
             Invitation target = manager.findByPin(activity.getPin());
             if (target != null) {
@@ -89,10 +106,12 @@ public class CreateInvitationController {
                 genderBox.setValue(target.getGender());
             }
         }
-
+        
+      //display update message
         saveButton.setText("Update");
     }
-
+    
+    //Handle Save Button and Validates all input fields
     @FXML
     private void handleSave() {
         try {
@@ -169,7 +188,7 @@ public class CreateInvitationController {
                 alert.showAndWait();
 
             } else {
-                //ediit
+                //update the existing Activity and Invitation in place
                 editingActivity.setActivityName(sport);
                 editingActivity.setOrganizer(organizer);
                 editingActivity.setDate(date.toString());
@@ -177,11 +196,12 @@ public class CreateInvitationController {
                 editingActivity.setTimeSlot(
                     String.format("%02d:%02d ~ %02d:%02d", startH, startM, endH, endM)
                 );
-
+                
+              //update the underlying Invitation object in the manager
                 Invitation target = manager.findByPin(editingActivity.getPin());
-
+                
                 if (target != null) {
-//                    target.setOrganizer(organizer);
+                    // target.setOrganizer(organizer);
                     target.setDate(date.toString());
                     target.setStartH(startH);
                     target.setStartM(startM);

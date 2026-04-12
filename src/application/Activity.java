@@ -2,7 +2,9 @@ package application;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class Activity {
+public class Activity { 
+	
+	//Private data fields using SimpleStringProperty for JavaFX property binding
 	private SimpleStringProperty activityName;
 	private SimpleStringProperty organizer;
 	private SimpleStringProperty date;
@@ -11,7 +13,8 @@ public class Activity {
 	private SimpleStringProperty gender;
 	private SimpleStringProperty status;
 	private SimpleStringProperty pin;
-
+    
+	//Creates an Activity Object with all Required Fields.
 	public Activity(String activityName, String organizer, String date, String location, String status, String pin, String timeSlot, String gender) {
 		this.activityName = new SimpleStringProperty(activityName);
 		this.organizer = new SimpleStringProperty(organizer);
@@ -23,27 +26,18 @@ public class Activity {
 		this.gender = new SimpleStringProperty(gender);
 	}
 	
-	public void setTimeSlot(String timeSlot) {
-		this.timeSlot.set(timeSlot);
-	}
+	//getter and setter method (Gender,TimeSlot,Pin,ActivityName,Organizer,Location,Status)
+	// .get() and .set() are used to read/write the value inside SimpleStringProperty
 	public String getGender() {
 		return gender.get();
-	}
-	
-	public void setGender(String gender) {
-		this.gender.set(gender);
 	}
 
 	public String getTimeSlot() {
 		return timeSlot.get();
 	}
-
+	
 	public String getPin() {
 		return pin.get();
-	}
-
-	public void setPin(String pin) {
-		this.pin.set(pin);
 	}
 
 	public String getActivityName() {
@@ -64,6 +58,19 @@ public class Activity {
 
 	public String getStatus() {
 		return status.get();
+	}
+	
+	
+	public void setGender(String gender) {
+		this.gender.set(gender);
+	}
+	
+	public void setTimeSlot(String timeSlot) {
+		this.timeSlot.set(timeSlot);
+	}
+	
+	public void setPin(String pin) {
+		this.pin.set(pin);
 	}
 	
 	public void setActivityName(String activityName) {
