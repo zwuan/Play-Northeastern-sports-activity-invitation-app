@@ -139,7 +139,26 @@ public class ActivityListController implements Initializable {
             || invitation.getDate().toLowerCase().contains(keyword)
             || invitation.getTimeSlot().toLowerCase().contains(keyword)
             || invitation.getLocation().toLowerCase().contains(keyword)
-            || invitation.getGender().toLowerCase().contains(keyword);
+            || matchesGenderFilter(invitation.getGender(), keyword);
+    }
+
+    private boolean matchesGenderFilter(String gender, String keyword) {
+        String normalizedGender;
+        if (gender == null) {
+            normalizedGender = "";
+        } else {
+            normalizedGender = gender.trim().toLowerCase();
+        }
+
+        if (isWholeGenderKeyword(keyword)) {
+            return (" " + normalizedGender + " ").contains(" " + keyword + " ");
+        }
+
+        return normalizedGender.contains(keyword);
+    }
+
+    private boolean isWholeGenderKeyword(String keyword) {
+        return "male".equals(keyword) || "female".equals(keyword) || "all gender".equals(keyword);
     }
     
     //Reloads the table with only activities matching the filter field text.
@@ -182,8 +201,7 @@ public class ActivityListController implements Initializable {
         
         //display join status joined/total count
         inv.incrementJoined();
-        messageLabel.setText("Joined: " + selected.getActivityName()
-            + "  (" + inv.getJoinedCount() + "/" + inv.getCount() + ")");
+        messageLabel.setText("Joined: " + selected.getActivityName() + "  (" + inv.getJoinedCount() + "/" + inv.getCount() + ")");
 
         refreshTable();
     }
@@ -277,6 +295,12 @@ public class ActivityListController implements Initializable {
     
     // Refresh Table update data field
     public void refreshTable() {
-        loadInvitations(filterField == null ? "" : filterField.getText());
+        String keyword;
+        if (filterField == null) {
+            keyword = "";
+        } else {
+            keyword = filterField.getText();
+        }
+        loadInvitations(keyword);
     }
 }
