@@ -1,8 +1,6 @@
 # Play! Northeastern Sports Activity Invitation App
 
-A JavaFX desktop application for creating, browsing, joining, and editing sports activity invitations around Northeastern-related locations.
-
-This project was built as a course project using Java and JavaFX, with a focus on GUI interaction, object-oriented design, and core data structure concepts.
+_A JavaFX desktop application for creating, browsing, joining, and editing sports activity invitations from locations around Northeastern's campus. This project was built using Java and JavaFX, with a focus on GUI interaction, object-oriented design, and core data structure concepts._
 
 ## Features
 
@@ -79,7 +77,7 @@ If you change the folder structure later, update the image references in `Main.f
 
 The home screen shows an interactive map and the latest activity added to the system.
 
-### Create Activity
+### Create Activities
 
 Users can create an activity by entering:
 
@@ -104,22 +102,22 @@ MR168F
 
 ### Activity List filter
 
-Users can filter out the search by entering **any** keywords
+Users can filter out the search by entering **any** keywords (uper/lower case does **not** matter)
 
-### Join Activity
+### Join Activities
 
 Users can open the activity list, select an activity, and join it if the activity is not yet full.
 
-### Edit Activity
+### Edit Activities
 
-Users can edit an existing activity after entering the correct PIN (**must** match uper/lower case).
+Users can edit an existing activity after entering the correct PIN (**must** use upercase).
 
 ## Course CSYE6200 Requirement Coverage
 
 This project uses JavaFX and covers 6 required topics:
 
 1. Class Definition: `Invitation`, `InvitationManager`, `Activity`
-2. Inheritance: `Main extends Application`
+2. Inheritance/Polymorphism: `Main extends Application`
 3. Interfaces: `ActivityListController implements Initializable`
 4. Generics / Collections / Iterators: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
 5. Lists: `ArrayList<Invitation>`
