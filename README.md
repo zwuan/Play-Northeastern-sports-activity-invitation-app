@@ -102,13 +102,17 @@ Example PIN 1: Marino Recreation Center, Female
 MR168F
 ```
 
+### Activity List filter
+
+Users can filter out the search by entering **any** keywords
+
 ### Join Activity
 
 Users can open the activity list, select an activity, and join it if the activity is not yet full.
 
 ### Edit Activity
 
-Users can edit an existing activity after entering the correct PIN.
+Users can edit an existing activity after entering the correct PIN (**must** match uper/lower case).
 
 ## Course CSYE6200 Requirement Coverage
 
