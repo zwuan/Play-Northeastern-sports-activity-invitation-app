@@ -128,7 +128,7 @@ public class ActivityListController implements Initializable {
         activityTable.setItems(activityList);
     }
     
-    //Searches across sport, organizer, date, time slot, location, and gender fields.
+    //Searches across sport, organizer, date, time slot, and location fields.
     private boolean matchesFilter(Invitation invitation, String keyword) {
        
     	if (keyword.isEmpty()) {
@@ -141,7 +141,8 @@ public class ActivityListController implements Initializable {
             || invitation.getLocation().toLowerCase().contains(keyword)
             || matchesGenderFilter(invitation.getGender(), keyword);
     }
-
+    
+    //independent search for gender, cuz "female" contains "male"
     private boolean matchesGenderFilter(String gender, String keyword) {
         String normalizedGender;
         if (gender == null) {
