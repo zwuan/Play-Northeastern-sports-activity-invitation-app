@@ -102,7 +102,7 @@ MR168F
 
 ### Activity List filter
 
-Users can filter out the search by entering **any** keywords (uper/lower case does **not** matter)
+Users can filter out the search by entering **any** keywords (upper/lower case does **not** matter)
 
 ### Join Activities
 
@@ -110,7 +110,7 @@ Users can open the activity list, select an activity, and join it if the activit
 
 ### Edit Activities
 
-Users can edit an existing activity after entering the correct PIN (**must** use upercase).
+Users can edit an existing activity after entering the correct PIN (**must** use uppercase).
 
 ## Course CSYE6200 Requirement Coverage
 
