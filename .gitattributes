@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# The Maven wrapper scripts are executed by the shell and by cmd.exe
+# respectively, so their line endings are not cosmetic: `* text=auto` above
+# would rewrite mvnw.cmd to LF, which breaks it on Windows.
+mvnw      text eol=lf
+mvnw.cmd  text eol=crlf

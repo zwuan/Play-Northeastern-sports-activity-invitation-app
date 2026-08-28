@@ -17,12 +17,12 @@ _A JavaFX desktop application for creating, browsing, joining, and editing sport
 
 - Java 25
 - JavaFX 25 (FXML)
-- Maven
+- Maven (wrapper included — no local install needed)
 - JUnit 5
 
 ## Project Structure
 
-Standard Maven layout, so `mvn` handles compilation, resource copying and tests
+Standard Maven layout, so Maven handles compilation, resource copying and tests
 without any hand-written build steps.
 
 ```text
@@ -101,7 +101,7 @@ players who have already joined.
 
 ## Course CSYE6200 Requirement Coverage
 
-This project uses JavaFX and covers 6 required topics:
+This project uses JavaFX and covers the required topics:
 
 1. Class Definition: `Invitation`, `InvitationManager`, `Activity`
 2. Inheritance/Polymorphism: `Main extends Application`
@@ -114,17 +114,24 @@ This project uses JavaFX and covers 6 required topics:
 
 ## Running the Project
 
-Requires JDK 25 and Maven. Nothing else — Maven downloads the JavaFX jars for
-your platform, so there is no SDK to install and no path to configure.
+Requires JDK 25. Nothing else — `mvnw` fetches Maven itself, and Maven fetches
+the JavaFX jars for your platform, so there is no SDK to install and no path to
+configure.
 
 ```bash
-mvn javafx:run
+./mvnw javafx:run
 ```
+
+On Windows use `mvnw.cmd` in place of `./mvnw`.
+
+The wrapper pins Maven 3.9.14 (see `.mvn/wrapper/maven-wrapper.properties`) so
+the build does not drift with whatever version happens to be installed. It is
+the `only-script` flavour, so there is no wrapper jar committed to the repo.
 
 ## Tests
 
 ```bash
-mvn test
+./mvnw test
 ```
 
 77 tests across five classes:
@@ -138,7 +145,7 @@ mvn test
 | `ControllerTest` | the list and create controllers driven on the FX thread | yes |
 
 Tests that need the JavaFX toolkit are **skipped, not failed**, on a headless
-machine — see `FxToolkit`. `mvn test` still exercises the model and the enums
+machine — see `FxToolkit`. `./mvnw test` still exercises the model and the enums
 there.
 
 `handleSave()` is not covered: it ends in `Alert.showAndWait()`, which blocks the
