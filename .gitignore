@@ -1,0 +1,8 @@
+# Compiled output (Eclipse writes classes and copied resources here)
+bin/
+build/
+out/
+*.class
+
+# macOS
+.DS_Store

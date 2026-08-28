@@ -5,7 +5,7 @@ _A JavaFX desktop application for creating, browsing, joining, and editing sport
 ## Features
 
 - Create a new sports activity invitation
-- Generate a unique, random PIN for each activity
+- Generate a random PIN for each activity, unique across all activities
 - Browse all activities in a table view
 - Filter activities by entering keywords
 - Join an activity and update player counts
@@ -45,7 +45,7 @@ The logo and map images used by the JavaFX UI are local project files included i
 - Logo image: `src/Play!Northeastern.png`
 - Map image: `src/map2.jpg`
 
-They are loaded from [`src/application/Main.fxml`](/Users/jimmyzuang/git/Play-Northeastern-sports-activity-invitation-app/src/application/Main.fxml) using relative paths:
+They are loaded from [`src/application/Main.fxml`](src/application/Main.fxml) using relative paths:
 
 ```xml
 <Image url="@../map2.jpg" />
@@ -100,6 +100,11 @@ Example PIN 1: Marino Recreation Center, Female
 MR168F
 ```
 
+The PIN is derived from the activity's current location and gender rather than
+stored, so editing either one re-issues the PIN — the update dialog shows the new
+value. `InvitationManager` assigns the random middle and guarantees no two
+activities share a PIN, which caps each location/gender pair at 1000 activities.
+
 ### Activity List filter
 
 Users can filter out the search by entering **any** keywords (upper/lower case does **not** matter)
@@ -110,7 +115,11 @@ Users can open the activity list, select an activity, and join it if the activit
 
 ### Edit Activities
 
-Users can edit an existing activity after entering the correct PIN (**must** use uppercase).
+Open the activity list, select an activity, and click **Edit**. PIN entry is
+case-insensitive. Editing runs through the same validation as creating, so an
+edit cannot store a time range, player count or location that the create form
+would have rejected, and the player count cannot be dropped below the number of
+players who have already joined.
 
 ## Course CSYE6200 Requirement Coverage
 
@@ -121,7 +130,8 @@ This project uses JavaFX and covers 6 required topics:
 3. Interfaces: `ActivityListController implements Initializable`
 4. Generics / Collections / Iterators: `TableView<Activity>`, `ObservableList<Activity>`, `Iterator<Invitation>`
 5. Lists: `ArrayList<Invitation>`
-6. Stacks: `Stack<String>` for latest activity tracking
+6. Stacks: `Stack<Invitation>` for latest activity tracking
+7. Enums: `Location`, `Gender`
 
 ## Running the Project
 
@@ -133,10 +143,21 @@ This project uses JavaFX and covers 6 required topics:
 
 ### Option 2: Compile and Run from Terminal
 
-If your JavaFX SDK is located at `/path/to/javafx-sdk/lib`, use:
+If your JavaFX SDK is located at `/path/to/javafx-sdk/lib`:
 
 ```bash
 javac -d bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml src/application/*.java
+```
+
+`javac` only compiles `.java` files, so the FXML and the images have to be copied
+into `bin/` as well — without this step `getResource("Main.fxml")` returns `null`
+and the app dies on startup:
+
+```bash
+cp src/application/*.fxml src/application/*.css bin/application/ && cp 'src/Play!Northeastern.png' src/map2.jpg bin/
+```
+
+```bash
 java -cp bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml application.Main
 ```
 
