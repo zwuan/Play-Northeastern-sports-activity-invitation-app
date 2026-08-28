@@ -1,8 +1,11 @@
-# Compiled output (Eclipse writes classes and copied resources here)
+# Maven build output
+target/
+
+# Eclipse (m2e regenerates these from pom.xml on import)
+.classpath
+.project
+.settings/
 bin/
-build/
-out/
-*.class
 
 # macOS
 .DS_Store
