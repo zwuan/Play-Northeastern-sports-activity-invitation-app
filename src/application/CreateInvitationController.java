@@ -6,14 +6,13 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class CreateInvitationController {
-    
-	
+
     private InvitationManager manager; // Shared data manager passed in from the previous screen
-    private boolean editMode = false; // Tracks whether if we are editing an existing activity (true) or creating a new one (false)
-    private Activity editingActivity = null; // The activity being edited
-    private Runnable onSaveSuccess; //Optional Callback
-    
-    //FXML fields injected from CreateInvitation.fxml 
+    private boolean editMode = false; // Editing an existing activity (true) or creating a new one (false)
+    private Invitation editingInvitation = null; // The invitation being edited
+    private Runnable onSaveSuccess; // Optional callback
+
+    // FXML fields injected from CreateInvitation.fxml
     @FXML private TextField orgField;
     @FXML private DatePicker datePicker;
     @FXML private TextField startHField;
@@ -22,96 +21,81 @@ public class CreateInvitationController {
     @FXML private TextField endMField;
     @FXML private TextField countField;
     @FXML private TextField sportField;
-    @FXML private ComboBox<String> locationBox;
-    @FXML private ComboBox<String> genderBox;
+    @FXML private ComboBox<Location> locationBox;
+    @FXML private ComboBox<Gender> genderBox;
     @FXML private Button saveButton;
-    
-    //populate Combo Box for location and gender, also setting datePicker
+
+    // Populate the combo boxes from the enums, so the form can never offer a
+    // location the rest of the app does not know about.
     @FXML
     public void initialize() {
-        locationBox.getItems().addAll(
-            "Marino Recreation Center",
-            "Cabot Center",
-            "Carter Playground",
-            "SquashBusters",
-            "Roxbury YMCA"
-        );
+        locationBox.getItems().addAll(Location.values());
+        genderBox.getItems().addAll(Gender.values());
 
-        genderBox.getItems().addAll(
-            "Male",
-            "Female",
-            "All Gender"
-        );
-        
+        // The day cell factory only greys out cells in the popup; the text field
+        // would still accept a typed-in past date, so it is switched off and
+        // handleSave checks the date again anyway.
+        datePicker.setEditable(false);
         datePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                setDisable(empty || date.isBefore(LocalDate.now()));// can only choose date today or date after today
+                setDisable(empty || date.isBefore(LocalDate.now()));
             }
         });
     }
-    
-    //set Manager
+
     public void setManager(InvitationManager manager) {
         this.manager = manager;
     }
-    
-    //set Callback
+
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
         this.onSaveSuccess = onSaveSuccess;
     }
-    
-    public void setEditActivity(Activity activity) {
-        if (activity == null) return;
-        
-        //pre-fill data
-        this.editMode = true;
-        this.editingActivity = activity;
-        
-        sportField.setText(activity.getActivityName());
-        orgField.setText(activity.getOrganizer());
-        locationBox.setValue(activity.getLocation());
-        
-        // Parse and set the date, show error if format is invalid
-        if (activity.getDate() != null && !activity.getDate().isEmpty()) {
-            try {
-                datePicker.setValue(LocalDate.parse(activity.getDate()));
-            } catch (Exception e) {
-            	showError("Invalid Date.");
-            }
-        }
-       
-        // Parse time slot (format: "HH:MM ~ HH:MM") and fill into separate fields
-        if (activity.getTimeSlot() != null && activity.getTimeSlot().contains("~")) {
-            try {
-                String[] parts = activity.getTimeSlot().split("~");
-                String[] start = parts[0].trim().split(":");
-                String[] end = parts[1].trim().split(":");
 
-                startHField.setText(start[0]);
-                startMField.setText(start[1]);
-                endHField.setText(end[0]);
-                endMField.setText(end[1]);
-            } catch (Exception e) {
-            	showError("Invalid Time.");
-            }
+    /**
+     * Switches the form into edit mode and fills it from the row's underlying
+     * invitation. Call {@link #setManager} first. Everything is read from the
+     * invitation rather than the table row, so there is no time-slot string to
+     * re-parse and nothing to keep in sync.
+     */
+    public void setEditActivity(Activity activity) {
+        if (activity == null) {
+            return;
         }
-        
-     // Find the matching Invitation in the manager to load count and gender
-        if (manager != null) {
-            Invitation target = manager.findByPin(activity.getPin());
-            if (target != null) {
-                countField.setText(String.valueOf(target.getCount()));
-                genderBox.setValue(target.getGender());
-            }
+
+        if (manager == null) {
+            showError("Manager is not initialized.");
+            return;
         }
-        
-      //display update message
+
+        Invitation target = manager.findByPin(activity.getPin());
+        if (target == null) {
+            showError("Activity not found.");
+            return;
+        }
+
+        this.editMode = true;
+        this.editingInvitation = target;
+
+        orgField.setText(target.getOrganizer());
+        sportField.setText(target.getSport());
+        locationBox.setValue(target.getLocation());
+        genderBox.setValue(target.getGender());
+        countField.setText(String.valueOf(target.getCount()));
+        datePicker.setValue(LocalDate.parse(target.getDate()));
+        startHField.setText(String.format("%02d", target.getStartH()));
+        startMField.setText(String.format("%02d", target.getStartM()));
+        endHField.setText(String.format("%02d", target.getEndH()));
+        endMField.setText(String.format("%02d", target.getEndM()));
+
         saveButton.setText("Update");
     }
-    
-    //Handle Save Button and Validates all input fields
+
+    // Validates the form, then hands the values to the model. Blank fields,
+    // impossible times and bad player counts are all rejected by Invitation, so
+    // creating and editing enforce exactly the same rules; only the name format
+    // and the no-past-dates rule are checked here, because they are form rules.
     @FXML
     private void handleSave() {
         try {
@@ -125,8 +109,9 @@ public class CreateInvitationController {
                 showError("Please enter organizer name.");
                 return;
             }
-            if (!organizer.matches("[a-zA-Z ]+")) {
-                showError("Organizer name must contain letters only.");
+            if (!organizer.trim().matches("\\p{L}[\\p{L} .'-]*")) {
+                showError("Organizer name must start with a letter and may only contain "
+                        + "letters, spaces, apostrophes, hyphens and periods.");
                 return;
             }
 
@@ -135,101 +120,60 @@ public class CreateInvitationController {
                 showError("Please select a date.");
                 return;
             }
+            if (date.isBefore(LocalDate.now())) {
+                showError("Please select today or a later date.");
+                return;
+            }
 
-            int startH = Integer.parseInt(startHField.getText());
-            int startM = Integer.parseInt(startMField.getText());
-            int endH = Integer.parseInt(endHField.getText());
-            int endM = Integer.parseInt(endMField.getText());
-            int count = Integer.parseInt(countField.getText());
+            int startH = Integer.parseInt(startHField.getText().trim());
+            int startM = Integer.parseInt(startMField.getText().trim());
+            int endH = Integer.parseInt(endHField.getText().trim());
+            int endM = Integer.parseInt(endMField.getText().trim());
+            int count = Integer.parseInt(countField.getText().trim());
 
             String sport = sportField.getText();
-            String location = locationBox.getValue();
-            String gender = genderBox.getValue();
-
-            if (sport == null || sport.trim().isEmpty()) {
-                showError("Please enter sport name.");
-                return;
-            }
-
-            if (location == null || location.trim().isEmpty()) {
-                showError("Please select a location.");
-                return;
-            }
-
-            if (gender == null || gender.trim().isEmpty()) {
-                showError("Please select gender.");
-                return;
-            }
+            Location location = locationBox.getValue();
+            Gender gender = genderBox.getValue();
 
             if (!editMode) {
-                Invitation invitation = new Invitation(
-                    organizer,
-                    date.toString(),
-                    startH,
-                    startM,
-                    endH,
-                    endM,
-                    count,
-                    sport,
-                    location,
-                    gender
-                );
+                Invitation invitation = new Invitation(organizer, date.toString(), startH, startM, endH, endM, count,
+                        sport, location, gender);
 
                 manager.addInvitation(invitation);
-
-                if (onSaveSuccess != null) {
-                    onSaveSuccess.run();
-                }
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText("Reservation Successful!");
-                alert.setContentText("Your PIN: " + invitation.getPin());
-                alert.showAndWait();
+                showInfo("Reservation Successful!", "Your PIN: " + invitation.getPin());
 
             } else {
-                //update the existing Activity and Invitation in place
-                editingActivity.setActivityName(sport);
-                editingActivity.setOrganizer(organizer);
-                editingActivity.setDate(date.toString());
-                editingActivity.setLocation(location);
-                editingActivity.setTimeSlot(
-                    String.format("%02d:%02d ~ %02d:%02d", startH, startM, endH, endM)
-                );
-                
-              //update the underlying Invitation object in the manager
-                Invitation target = manager.findByPin(editingActivity.getPin());
-                
-                if (target != null) {
-                    // target.setOrganizer(organizer);
-                    target.setDate(date.toString());
-                    target.setStartH(startH);
-                    target.setStartM(startM);
-                    target.setEndH(endH);
-                    target.setEndM(endM);
-                    target.setCount(count);
-                    target.setSport(sport);
-                    target.setLocation(location);
-                    target.setGender(gender);
-                }
+                // The PIN encodes location and gender, so an edit can change it.
+                String pin = manager.updateInvitation(editingInvitation, organizer, date.toString(), startH, startM,
+                        endH, endM, count, sport, location, gender);
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText("Update Successful!");
-                alert.setContentText("Activity updated successfully.");
-                alert.showAndWait();
+                showInfo("Update Successful!", "Activity updated.\nYour PIN is now: " + pin);
+            }
+
+            if (onSaveSuccess != null) {
+                onSaveSuccess.run();
             }
 
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();
 
         } catch (NumberFormatException e) {
-            showError("Please enter valid numbers.");
+            showError("Please enter whole numbers for the times and the player count.");
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
-        } catch (Exception e) {
-            showError("Unexpected error occurred.");
+        } catch (RuntimeException e) {
+            // Anything reaching here is a defect, so keep the trace.
+            e.printStackTrace();
+            showError("Unexpected error: " + e);
         }
+    }
+
+    private void showInfo(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void showError(String message) {
