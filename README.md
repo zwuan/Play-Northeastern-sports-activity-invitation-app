@@ -15,61 +15,39 @@ _A JavaFX desktop application for creating, browsing, joining, and editing sport
 
 ## Tech Stack
 
-- Java
-- JavaFX
-- FXML
+- Java 25
+- JavaFX 25 (FXML)
+- Maven
+- JUnit 5
 
 ## Project Structure
 
+Standard Maven layout, so `mvn` handles compilation, resource copying and tests
+without any hand-written build steps.
+
 ```text
+pom.xml
 src/
-  map2.jpg
-  Play!Northeastern.png
-  application/
-    Main.java
-    MainController.java
-    ActivityListController.java
-    CreateInvitationController.java
-    Invitation.java
-    InvitationManager.java
-    Activity.java
-    Main.fxml
-    ActivityList.fxml
-    CreateInvitation.fxml
+  main/
+    java/application/          Main, controllers, Invitation, InvitationManager,
+                               Activity, Location, Gender
+    resources/
+      map2.jpg                 loaded by Main.fxml as @../map2.jpg
+      Play!Northeastern.png    loaded by Main.fxml as @../Play!Northeastern.png
+      application/             Main.fxml, ActivityList.fxml,
+                               CreateInvitation.fxml, application.css
+  test/
+    java/application/          InvitationTest, InvitationManagerTest,
+                               LocationTest, FxmlWiringTest, ControllerTest
+target/                        build output (gitignored)
 ```
 
-## Local Image Assets
-
-The logo and map images used by the JavaFX UI are local project files included in this repository.
-
-- Logo image: `src/Play!Northeastern.png`
-- Map image: `src/map2.jpg`
-
-They are loaded from [`src/application/Main.fxml`](src/application/Main.fxml) using relative paths:
-
-```xml
-<Image url="@../map2.jpg" />
-<Image url="@../Play!Northeastern.png" />
-```
-
-This means the image files **MUST** stay available in the compiled runtime resource path as siblings of the `application/` folder.
-
-### If the logo or map does not display
-
-Common fixes:
-
-1. Make sure `map2.jpg` and `Play!Northeastern.png` are present in `src/`.
-2. Make sure those files are also copied into the runtime output folder.
-3. Do not rename or move the image files unless you also update the paths inside `Main.fxml`.
-
-Example manual fix 1:
-
-```bash
-cp src/map2.jpg bin/
-cp src/Play!Northeastern.png bin/
-```
-
-If you change the folder structure later, update the image references in `Main.fxml` to match the new relative locations.
+The images sit at the resources root, not inside `application/`, because
+`Main.fxml` reaches them with `@../` — Maven copies `src/main/resources` to the
+classpath root, so `target/classes/map2.jpg` ends up one level above
+`target/classes/application/Main.fxml`, which is exactly what that path needs.
+`FxmlWiringTest` asserts this resolves, so moving the images will fail the build
+rather than produce an app with no map.
 
 ## How It Works
 
@@ -132,35 +110,47 @@ This project uses JavaFX and covers 6 required topics:
 5. Lists: `ArrayList<Invitation>`
 6. Stacks: `Stack<Invitation>` for latest activity tracking
 7. Enums: `Location`, `Gender`
+8. Unit testing: JUnit 5, see [Tests](#tests)
 
 ## Running the Project
 
-### Option 1: Run from Eclipse
-
-1. Import the project into Eclipse
-2. Make sure JavaFX is configured in your build path
-3. Run `Main.java`
-
-### Option 2: Compile and Run from Terminal
-
-If your JavaFX SDK is located at `/path/to/javafx-sdk/lib`:
+Requires JDK 25 and Maven. Nothing else — Maven downloads the JavaFX jars for
+your platform, so there is no SDK to install and no path to configure.
 
 ```bash
-javac -d bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml src/application/*.java
+mvn javafx:run
 ```
 
-`javac` only compiles `.java` files, so the FXML and the images have to be copied
-into `bin/` as well — without this step `getResource("Main.fxml")` returns `null`
-and the app dies on startup:
+## Tests
 
 ```bash
-cp src/application/*.fxml src/application/*.css bin/application/ && cp 'src/Play!Northeastern.png' src/map2.jpg bin/
+mvn test
 ```
 
-```bash
-java -cp bin --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml application.Main
-```
+77 tests across five classes:
 
+| Class | Covers | Needs a display |
+|---|---|---|
+| `InvitationTest` | validation shared by create and edit, PIN derivation, capacity, null and blank input | no |
+| `InvitationManagerTest` | PIN uniqueness and exhaustion, lookup, latest-activity tracking | no |
+| `LocationTest` | every court on the map is bookable, PIN codes are distinct, enum round-trips | no |
+| `FxmlWiringTest` | FXML and images resolve off the classpath, every `onAction` handler exists, every FXML loads | partly |
+| `ControllerTest` | the list and create controllers driven on the FX thread | yes |
+
+Tests that need the JavaFX toolkit are **skipped, not failed**, on a headless
+machine — see `FxToolkit`. `mvn test` still exercises the model and the enums
+there.
+
+`handleSave()` is not covered: it ends in `Alert.showAndWait()`, which blocks the
+FX thread, so form validation cannot be driven from a test. Extracting that
+validation into a function that returns a result instead of showing a dialog
+would fix it.
+
+### Running in Eclipse
+
+The old `.classpath` and `.project` were deleted — `pom.xml` replaces them, and
+they pointed at the pre-Maven layout. Import with **File → Import → Existing
+Maven Projects** and m2e will regenerate them.
 
 ## Notes
 
